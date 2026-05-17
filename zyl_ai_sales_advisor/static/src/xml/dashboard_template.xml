@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="zyl_ai_sales_advisor.Dashboard">
+  <div class="zyl-sad-root">
+
+    <!-- ══════════════ HEADER BAR ══════════════ -->
+    <div class="zyl-sad-header">
+      <div class="zyl-sad-header-left">
+        <span class="zyl-sad-logo">🤖</span>
+        <div>
+          <h1 class="zyl-sad-title">AI Sales Advisor</h1>
+          <p class="zyl-sad-subtitle">Powered by Zylentor ERP Solutions</p>
+        </div>
+      </div>
+      <div class="zyl-sad-header-controls">
+        <!-- Quick period presets -->
+        <div class="zyl-sad-period-pills">
+          <button t-att-class="'zyl-sad-pill' + (state.activePeriod === 'mtd' ? ' pill-active' : '')"
+                  t-on-click="() => this.onSetPeriod('mtd')">MTD</button>
+          <button t-att-class="'zyl-sad-pill' + (state.activePeriod === '30d' ? ' pill-active' : '')"
+                  t-on-click="() => this.onSetPeriod('30d')">30D</button>
+          <button t-att-class="'zyl-sad-pill' + (state.activePeriod === '90d' ? ' pill-active' : '')"
+                  t-on-click="() => this.onSetPeriod('90d')">90D</button>
+          <button t-att-class="'zyl-sad-pill' + (state.activePeriod === '6m' ? ' pill-active' : '')"
+                  t-on-click="() => this.onSetPeriod('6m')">6M</button>
+          <button t-att-class="'zyl-sad-pill' + (state.activePeriod === '1y' ? ' pill-active' : '')"
+                  t-on-click="() => this.onSetPeriod('1y')">1Y</button>
+          <button t-att-class="'zyl-sad-pill' + (state.activePeriod === 'ytd' ? ' pill-active' : '')"
+                  t-on-click="() => this.onSetPeriod('ytd')">YTD</button>
+        </div>
+        <!-- Custom date range -->
+        <div class="zyl-sad-custom-range">
+          <input type="date" class="zyl-sad-date-input"
+                 t-att-value="state.dateFrom"
+                 t-on-change="onDateFromChange"/>
+          <span class="zyl-sad-label" style="margin:0 4px">→</span>
+          <input type="date" class="zyl-sad-date-input"
+                 t-att-value="state.dateTo"
+                 t-on-change="onDateToChange"/>
+        </div>
+        <button class="zyl-sad-btn-chat" t-on-click="toggleChat">
+          💬 AI Advisor
+        </button>
+      </div>
+    </div>
+
+    <!-- Error banner -->
+    <div t-if="state.error" class="zyl-sad-error-banner">
+      ⚠️ <t t-esc="state.error"/>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div t-if="state.loading" class="zyl-sad-loading">
+      <div class="zyl-sad-spinner"/>
+      <p>Analysing your sales data…</p>
+    </div>
+
+    <!-- ══════════════ MAIN CONTENT ══════════════ -->
+    <div t-if="!state.loading" class="zyl-sad-body">
+
+      <!-- ─── KPI CARDS ─── -->
+      <section class="zyl-sad-section">
+        <div class="zyl-sad-section-header">
+          <h2>📊 Key Performance Indicators</h2>
+          <button class="zyl-sad-help-btn" t-on-click="() => this.toggleHelp('kpi')">?</button>
+        </div>
+        <div t-if="isHelpOpen('kpi')" class="zyl-sad-help-box">
+          <strong>What are KPIs?</strong> Key Performance Indicators give you an instant snapshot
+          of your sales health. <em>Revenue Growth</em> compares this period against the same-length
+          period immediately before it. <em>AOV</em> (Average Order Value) tells you how much
+          customers spend per order on average — increasing AOV is one of the fastest ways to
+          grow revenue without acquiring new customers.
+        </div>
+        <div class="zyl-sad-kpi-grid">
+          <div class="zyl-sad-kpi-card kpi-revenue" t-on-click="() => this.openKpiDrilldown('revenue')" style="cursor:pointer" title="View sale orders">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-body">
+              <div class="kpi-value" t-esc="formatCurrency(state.kpis.total_revenue || 0)"/>
+              <div class="kpi-label">Total Revenue</div>
+            </div>
+          </div>
+          <div class="zyl-sad-kpi-card kpi-orders" t-on-click="() => this.openKpiDrilldown('orders')" style="cursor:pointer" title="View sale orders">
+            <div class="kpi-icon">📦</div>
+            <div class="kpi-body">
+              <div class="kpi-value" t-esc="formatNumber(state.kpis.total_orders || 0)"/>
+              <div class="kpi-label">Total Orders</div>
+            </div>
+          </div>
+          <div class="zyl-sad-kpi-card kpi-aov" t-on-click="() => this.openKpiDrilldown('aov')" style="cursor:pointer" title="View sale orders">
+            <div class="kpi-icon">🛒</div>
+            <div class="kpi-body">
+              <div class="kpi-value" t-esc="formatCurrency(state.kpis.avg_order_value || 0)"/>
+              <div class="kpi-label">Avg Order Value</div>
+            </div>
+          </div>
+          <div class="zyl-sad-kpi-card kpi-customers" t-on-click="() => this.openKpiDrilldown('customers')" style="cursor:pointer" title="View customers">
+            <div class="kpi-icon">👥</div>
+            <div class="kpi-body">
+              <div class="kpi-value" t-esc="formatNumber(state.kpis.unique_customers || 0)"/>
+              <div class="kpi-label">Unique Customers</div>
+            </div>
+          </div>
+          <div class="zyl-sad-kpi-card kpi-growth" t-on-click="() => this.openKpiDrilldown('growth')" style="cursor:pointer" title="View sale orders">
+            <div class="kpi-icon">📈</div>
+            <div class="kpi-body">
+              <div t-att-class="'kpi-value ' + growthClass">
+                <t t-esc="growthIcon"/>
+                <t t-esc="Math.abs(state.kpis.growth_pct || 0).toFixed(1)"/>%
+              </div>
+              <div class="kpi-label">Revenue Growth</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── TOP PRODUCTS + MONTHLY TREND ─── -->
+      <section class="zyl-sad-section">
+        <div class="zyl-sad-charts-row">
+
+          <!-- Top Products Bar Chart -->
+          <div class="zyl-sad-chart-card chart-bar">
+            <div class="zyl-sad-section-header">
+              <h3>🏆 Top Products by Revenue</h3>
+              <button class="zyl-sad-help-btn" t-on-click="() => this.toggleHelp('top_products')">?</button>
+            </div>
+            <div t-if="isHelpOpen('top_products')" class="zyl-sad-help-box">
+              This chart ranks your products by revenue in the selected period.
+              Long bars mean high revenue. <strong>Focus sales efforts on your top 3</strong>
+              — they drive the most income. Products ranked 4–10 represent your
+              growth opportunity: a small uplift there can meaningfully impact total revenue.
+            </div>
+            <canvas t-ref="canvasTopProducts" width="460" height="340"/>
+          </div>
+
+          <!-- Monthly Revenue Line Chart -->
+          <div class="zyl-sad-chart-card chart-line">
+            <div class="zyl-sad-section-header">
+              <h3>📅 Monthly Revenue Trend</h3>
+              <button class="zyl-sad-help-btn" t-on-click="() => this.toggleHelp('monthly')">?</button>
+            </div>
+            <div t-if="isHelpOpen('monthly')" class="zyl-sad-help-box">
+              This line chart shows revenue month by month. An upward slope
+              indicates healthy growth. <strong>Dips</strong> in specific months often
+              correspond to seasonality, holidays, or promotion gaps — scroll down to
+              see the Seasonal Analysis for deeper context. Dots represent each month's
+              exact revenue value.
+            </div>
+            <canvas t-ref="canvasMonthly" width="460" height="340"/>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ─── CATEGORY BREAKDOWN + SEASONAL ─── -->
+      <section class="zyl-sad-section">
+        <div class="zyl-sad-charts-row">
+
+          <!-- Category Doughnut -->
+          <div class="zyl-sad-chart-card chart-doughnut">
+            <div class="zyl-sad-section-header">
+              <h3>🗂️ Revenue by Category</h3>
+              <button class="zyl-sad-help-btn" t-on-click="() => this.toggleHelp('category')">?</button>
+            </div>
+            <div t-if="isHelpOpen('category')" class="zyl-sad-help-box">
+              The doughnut chart shows how revenue is distributed across product categories.
+              A <strong>dominant single slice</strong> (>50%) indicates high concentration risk —
+              if that category underperforms, overall revenue drops significantly.
+              Aim for a diversified portfolio. The centre shows your total revenue.
+            </div>
+            <canvas t-ref="canvasDoughnut" width="460" height="280"/>
+          </div>
+
+          <!-- Seasonal Grouped Bar -->
+          <div class="zyl-sad-chart-card chart-seasonal">
+            <div class="zyl-sad-section-header">
+              <h3>🌿 Seasonal Performance</h3>
+              <button class="zyl-sad-help-btn" t-on-click="() => this.toggleHelp('seasonal')">?</button>
+            </div>
+            <div t-if="isHelpOpen('seasonal')" class="zyl-sad-help-box">
+              Each group of bars represents one of your top 5 products.
+              The 4 coloured bars within each group show revenue per season:
+              🌸 Spring (Mar–May) · ☀️ Summer (Jun–Aug) · 🍂 Autumn (Sep–Nov) · ❄️ Winter (Dec–Feb).
+              <strong>Tall bars = strong season for that product.</strong>
+              Use this to time promotions, stock up inventory, and align your sales
+              calendar with natural demand cycles.
+            </div>
+            <canvas t-ref="canvasSeasonal" width="460" height="280"/>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ─── SEASONAL TABLE (Heatmap) ─── -->
+      <section class="zyl-sad-section">
+        <div class="zyl-sad-section-header">
+          <h2>🌡️ Seasonal Heatmap — Product × Season</h2>
+          <button class="zyl-sad-help-btn" t-on-click="() => this.toggleHelp('heatmap')">?</button>
+        </div>
+        <div t-if="isHelpOpen('heatmap')" class="zyl-sad-help-box">
+          Each cell shows the revenue for a product in a given season.
+          <strong>Green</strong> = strong performance · <strong>Yellow</strong> = moderate ·
+          <strong>Red/light</strong> = weak. The "Best Season" column tells you when to
+          push each product hardest. The "Worst Season" highlights where discounts or
+          bundling may compensate for low demand.
+        </div>
+
+        <div class="zyl-sad-heatmap-wrapper">
+          <table class="zyl-sad-heatmap" t-if="state.seasonal.products.length">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th t-foreach="state.seasonal.seasons" t-as="season" t-key="season">
+                  <t t-esc="getSeasonIcon(season)"/> <t t-esc="season"/>
+                </th>
+                <th>Best Season</th>
+                <th>Worst Season</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr t-foreach="state.seasonal.products" t-as="prod" t-key="prod.product_name">
+                <td class="heatmap-product-name" t-esc="prod.product_name"/>
+                <td t-foreach="state.seasonal.seasons" t-as="season" t-key="season"
+                    t-att-class="'heatmap-cell ' + _heatClass(prod, season)">
+                  <t t-esc="formatCurrency(prod.data[season] || 0)"/>
+                </td>
+                <td class="heatmap-best">
+                  <t t-if="prod.best_season">
+                    <t t-esc="getSeasonIcon(prod.best_season)"/>
+                    <t t-esc="prod.best_season"/>
+                  </t>
+                  <t t-else="">—</t>
+                </td>
+                <td class="heatmap-worst">
+                  <t t-if="prod.worst_season">
+                    <t t-esc="prod.worst_season"/>
+                  </t>
+                  <t t-else="">—</t>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div t-else="" class="zyl-sad-empty">No seasonal data for the selected period.</div>
+        </div>
+      </section>
+
+      <!-- ─── AI INSIGHTS PANEL ─── -->
+      <section class="zyl-sad-section">
+        <div class="zyl-sad-section-header">
+          <h2>💡 AI-Generated Insights</h2>
+          <div class="zyl-sad-insight-controls">
+            <select class="zyl-sad-select" t-on-change="onInsightTypeChange">
+              <option value="sales_overview">📊 Sales Overview</option>
+              <option value="top_product">🏆 Top Product Analysis</option>
+              <option value="seasonal">🌿 Seasonal Trends</option>
+              <option value="recommendation">💡 Recommendations</option>
+              <option value="forecast">📈 Revenue Forecast</option>
+              <option value="general">🔍 General Analysis</option>
+            </select>
+            <button class="zyl-sad-btn-primary" t-on-click="onGenerateInsight"
+                    t-att-disabled="state.insightGenerating">
+              <t t-if="state.insightGenerating">⏳ Generating…</t>
+              <t t-else="">✨ Generate Insight</t>
+            </button>
+            <button class="zyl-sad-btn-secondary" t-on-click="openInsights">View All →</button>
+            <button class="zyl-sad-help-btn" t-on-click="() => this.toggleHelp('insights')">?</button>
+          </div>
+        </div>
+        <div t-if="isHelpOpen('insights')" class="zyl-sad-help-box">
+          Insights are AI-generated analyses of your sales data.
+          <strong>Auto insights</strong> are created weekly by a background scheduler.
+          <strong>Manual insights</strong> are generated on-demand using the selector above.
+          Each insight is saved to the database and can be reviewed, shared, or archived
+          from the Analysis → AI Insights menu. Use the <em>Generate Insight</em> button
+          to ask the AI for a specific type of analysis right now.
+        </div>
+
+        <div class="zyl-sad-insights-grid" t-if="state.savedInsights.length">
+          <div t-foreach="state.savedInsights" t-as="ins" t-key="ins.id"
+               t-att-class="'zyl-sad-insight-card ' + getPriorityClass(ins.priority)"
+               t-on-click="() => this.openInsightRecord(ins.id)"
+               style="cursor:pointer">
+            <div class="insight-card-header">
+              <span class="insight-icon"><t t-esc="getInsightIcon(ins.type)"/></span>
+              <span class="insight-type-badge" t-esc="ins.type.replace('_',' ')"/>
+            </div>
+            <h4 class="insight-title" t-esc="ins.title"/>
+            <p class="insight-summary" t-esc="ins.summary"/>
+            <div class="insight-footer">
+              <span class="insight-period" t-esc="ins.period_label"/>
+              <span class="insight-drilldown-hint">View →</span>
+            </div>
+          </div>
+        </div>
+        <div t-else="" class="zyl-sad-empty">
+          No insights yet. Click <strong>Generate Insight</strong> to create your first AI analysis.
+        </div>
+      </section>
+
+    </div><!-- /body -->
+
+    <!-- ══════════════ AI CHAT SIDEBAR ══════════════ -->
+    <div t-att-class="'zyl-sad-chat-panel ' + (state.chatOpen ? 'chat-open' : '')"
+         t-att-style="'width:' + state.chatWidth + 'px'"
+         t-ref="chatPanel">
+      <div class="chat-resize-handle" t-on-mousedown="onChatResizeStart"/>
+      <div class="chat-panel-header">
+        <span>🤖 AI Sales Advisor</span>
+        <button class="chat-close-btn" t-on-click="toggleChat">✕</button>
+      </div>
+      <div class="chat-messages-area">
+        <div t-foreach="state.chatMessages" t-as="msg" t-key="msg.id"
+             t-att-class="'chat-bubble ' + (msg.role === 'user' ? 'bubble-user' : 'bubble-ai') + (msg.isError ? ' bubble-error' : '')">
+          <div class="bubble-role">
+            <t t-if="msg.role === 'user'">You</t>
+            <t t-else="">🤖 Advisor</t>
+          </div>
+          <div class="bubble-content" t-esc="msg.content"/>
+        </div>
+        <!-- Typing indicator -->
+        <div t-if="state.chatLoading" class="chat-bubble bubble-ai">
+          <div class="bubble-role">🤖 Advisor</div>
+          <div class="typing-indicator">
+            <span/><span/><span/>
+          </div>
+        </div>
+        <div t-ref="chatEnd"/>
+      </div>
+      <div class="chat-input-area">
+        <textarea class="chat-input"
+                  placeholder="Ask your Sales Advisor anything about your sales…"
+                  t-att-value="state.chatInput"
+                  t-on-input="onChatInputChange"
+                  t-on-keydown="onChatKeydown"
+                  rows="3"/>
+        <button class="chat-send-btn"
+                t-on-click="onChatSend"
+                t-att-disabled="state.chatLoading || !state.chatInput.trim()">
+          <t t-if="state.chatLoading">⏳</t>
+          <t t-else="">Send ➤</t>
+        </button>
+      </div>
+      <div class="chat-disclaimer">
+        AI is restricted to sales-related queries only.
+        <a t-on-click="openChatSessions" href="#">View history →</a>
+      </div>
+    </div>
+
+    <!-- Overlay when chat is open on mobile -->
+    <div t-if="state.chatOpen" class="zyl-sad-overlay" t-on-click="toggleChat"/>
+
+  </div>
+</t>
+
+</templates>

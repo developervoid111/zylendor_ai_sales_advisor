@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════
+         Root App Menu
+    ═══════════════════════════════════════════════════════════════ -->
+    <menuitem id="menu_sales_ai_root"
+              name="AI Sales Advisor"
+              sequence="55"
+              web_icon="zyl_ai_sales_advisor,static/description/icon.png"
+              groups="zyl_ai_sales_advisor.group_sales_ai_user"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_sales_ai_dashboard"
+              name="Dashboard"
+              parent="menu_sales_ai_root"
+              action="action_sales_advisor_dashboard"
+              sequence="10"
+              groups="zyl_ai_sales_advisor.group_sales_ai_user"/>
+
+    <!-- ── Analysis ──────────────────────────────────────────── -->
+    <menuitem id="menu_sales_ai_analysis"
+              name="Analysis"
+              parent="menu_sales_ai_root"
+              sequence="20"
+              groups="zyl_ai_sales_advisor.group_sales_ai_user"/>
+
+    <menuitem id="menu_sales_ai_insights"
+              name="AI Insights"
+              parent="menu_sales_ai_analysis"
+              action="action_sales_insights"
+              sequence="10"
+              groups="zyl_ai_sales_advisor.group_sales_ai_user"/>
+
+    <!-- ── Chat ─────────────────────────────────────────────── -->
+    <menuitem id="menu_sales_ai_chat"
+              name="Chat Sessions"
+              parent="menu_sales_ai_root"
+              action="action_ai_chat_sessions"
+              sequence="30"
+              groups="zyl_ai_sales_advisor.group_sales_ai_user"/>
+
+    <!-- ── Configuration ────────────────────────────────────── -->
+    <menuitem id="menu_sales_ai_config"
+              name="Configuration"
+              parent="menu_sales_ai_root"
+              sequence="90"
+              groups="zyl_ai_sales_advisor.group_sales_ai_manager"/>
+
+    <menuitem id="menu_sales_ai_config_settings"
+              name="AI Settings"
+              parent="menu_sales_ai_config"
+              action="action_ai_config"
+              sequence="10"
+              groups="zyl_ai_sales_advisor.group_sales_ai_manager"/>
+
+</odoo>

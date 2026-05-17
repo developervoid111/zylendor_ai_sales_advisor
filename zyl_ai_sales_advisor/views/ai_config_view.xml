@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         AI Configuration Form
+    ════════════════════════════════════════════════════════════════ -->
+    <record id="view_ai_config_form" model="ir.ui.view">
+        <field name="name">zyl.ai.config.form</field>
+        <field name="model">zyl.ai.config</field>
+        <field name="arch" type="xml">
+            <form string="AI Sales Advisor — Configuration">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="AI Provider">
+                            <field name="ai_provider" widget="radio"/>
+                            <field name="api_key" password="True"
+                                   placeholder="sk-... or sk-ant-... or AIza..."/>
+                            <field name="openai_model"
+                                   invisible="ai_provider != 'openai'"/>
+                            <field name="anthropic_model"
+                                   invisible="ai_provider != 'anthropic'"/>
+                            <field name="google_model"
+                                   invisible="ai_provider != 'google'"/>
+                            <field name="custom_model_name"
+                                   placeholder="e.g. gemini-2.5-pro-preview-05-06"
+                                   invisible="not (
+                                       (ai_provider == 'openai'    and openai_model    == 'custom') or
+                                       (ai_provider == 'anthropic' and anthropic_model == 'custom') or
+                                       (ai_provider == 'google'    and google_model    == 'custom')
+                                   )"/>
+                            <field name="model_name" readonly="1"
+                                   string="Resolved Model ID"/>
+                        </group>
+                        <group string="Response Settings">
+                            <field name="max_tokens"/>
+                            <field name="temperature" widget="float"/>
+                            <field name="max_history_messages"/>
+                        </group>
+                        <group string="Data Context">
+                            <field name="analysis_days"/>
+                            <field name="top_products_count"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Insight Automation">
+                            <field name="auto_insights_enabled"/>
+                            <field name="insights_email_notify"/>
+                            <field name="insights_recipient_ids"
+                                   widget="many2many_tags"
+                                   invisible="not insights_email_notify"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Custom AI Instructions">
+                            <field name="custom_instructions"
+                                   placeholder="Optional: Add extra guidance for the AI advisor, e.g. 'Focus on B2B customers only.'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_config_list" model="ir.ui.view">
+        <field name="name">zyl.ai.config.list</field>
+        <field name="model">zyl.ai.config</field>
+        <field name="arch" type="xml">
+            <list string="AI Configurations">
+                <field name="name"/>
+                <field name="ai_provider"/>
+                <field name="model_name"/>
+                <field name="auto_insights_enabled"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ai_config" model="ir.actions.act_window">
+        <field name="name">AI Configuration</field>
+        <field name="res_model">zyl.ai.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+
+</odoo>
