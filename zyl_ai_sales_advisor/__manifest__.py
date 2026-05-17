@@ -86,7 +86,11 @@ Core Features
         ],
     },
 
-    "images": ["static/description/icon.png"],
+    "images": [
+        "static/description/ss_01_dashboard.png",
+        "static/description/ss_02_seasonal_heatmap.png",
+        "static/description/ss_03_insight_detail.png",
+    ],
     "installable": True,
     "application": True,
     "auto_install": False,
