@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_config_manager,zyl.ai.config manager,model_zyl_ai_config,group_sales_ai_manager,1,1,1,1
+access_ai_config_user,zyl.ai.config user,model_zyl_ai_config,group_sales_ai_user,1,0,0,0
+access_ai_chat_session_user,zyl.ai.chat.session user,model_zyl_ai_chat_session,group_sales_ai_user,1,1,1,0
+access_ai_chat_session_manager,zyl.ai.chat.session manager,model_zyl_ai_chat_session,group_sales_ai_manager,1,1,1,1
+access_ai_chat_message_user,zyl.ai.chat.message user,model_zyl_ai_chat_message,group_sales_ai_user,1,1,1,0
+access_ai_chat_message_manager,zyl.ai.chat.message manager,model_zyl_ai_chat_message,group_sales_ai_manager,1,1,1,1
+access_sales_insight_user,zyl.sales.insight user,model_zyl_sales_insight,group_sales_ai_user,1,0,0,0
+access_sales_insight_manager,zyl.sales.insight manager,model_zyl_sales_insight,group_sales_ai_manager,1,1,1,1

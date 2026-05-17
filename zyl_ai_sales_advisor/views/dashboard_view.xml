@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Client action that loads the custom OWL dashboard -->
+    <record id="action_sales_advisor_dashboard" model="ir.actions.client">
+        <field name="name">Sales AI Dashboard</field>
+        <field name="tag">zyl_ai_sales_advisor.Dashboard</field>
+    </record>
+
+</odoo>
