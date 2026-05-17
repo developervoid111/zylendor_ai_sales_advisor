@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f2444"/>
+      <stop offset="100%" style="stop-color:#1e3a6e"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6"/>
+      <stop offset="100%" style="stop-color:#60a5fa"/>
+    </linearGradient>
+    <linearGradient id="chart" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#60a5fa;stop-opacity:0.9"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="128" height="128" rx="22" fill="url(#bg)"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="42" x2="128" y2="42" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="0" y1="84" x2="128" y2="84" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="42" y1="0" x2="42" y2="128" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="86" y1="0" x2="86" y2="128" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+
+  <!-- Bar chart at bottom -->
+  <rect x="14" y="84" width="10" height="22" rx="2" fill="url(#chart)"/>
+  <rect x="27" y="74" width="10" height="32" rx="2" fill="url(#chart)"/>
+  <rect x="40" y="64" width="10" height="42" rx="2" fill="url(#chart)"/>
+  <rect x="53" y="70" width="10" height="36" rx="2" fill="url(#chart)"/>
+  <rect x="66" y="58" width="10" height="48" rx="2" fill="url(#chart)"/>
+  <rect x="79" y="50" width="10" height="56" rx="2" fill="url(#chart)"/>
+  <rect x="92" y="44" width="10" height="62" rx="2" fill="url(#chart)"/>
+  <rect x="105" y="36" width="10" height="70" rx="2" fill="url(#chart)"/>
+
+  <!-- Trend line over chart -->
+  <polyline points="19,82 32,72 45,62 58,68 71,56 84,48 97,42 110,34"
+            fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Trend line dots -->
+  <circle cx="71" cy="56" r="3" fill="#34d399"/>
+  <circle cx="110" cy="34" r="3" fill="#34d399"/>
+
+  <!-- Robot head - circle background -->
+  <circle cx="64" cy="36" r="22" fill="rgba(37,99,235,0.25)" stroke="rgba(96,165,250,0.5)" stroke-width="1.5"/>
+
+  <!-- Robot face -->
+  <!-- Head -->
+  <rect x="50" y="22" width="28" height="24" rx="6" fill="url(#glow)" filter="url(#shadow)"/>
+  <!-- Antenna -->
+  <line x1="64" y1="22" x2="64" y2="16" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="64" cy="14" r="3" fill="#60a5fa"/>
+  <!-- Eyes -->
+  <rect x="54" y="30" width="6" height="5" rx="2" fill="#0f2444"/>
+  <rect x="68" y="30" width="6" height="5" rx="2" fill="#0f2444"/>
+  <!-- Eye glow -->
+  <rect x="55" y="31" width="2" height="2" rx="1" fill="#60a5fa"/>
+  <rect x="69" y="31" width="2" height="2" rx="1" fill="#60a5fa"/>
+  <!-- Mouth -->
+  <rect x="57" y="38" width="14" height="3" rx="1.5" fill="rgba(15,36,68,0.8)"/>
+  <rect x="58" y="38" width="3" height="3" rx="1" fill="#34d399"/>
+  <rect x="63" y="38" width="3" height="3" rx="1" fill="#34d399"/>
+  <rect x="68" y="38" width="3" height="3" rx="1" fill="#34d399"/>
+
+  <!-- AI spark / chat bubble icon -->
+  <circle cx="96" cy="22" r="10" fill="rgba(52,211,153,0.15)" stroke="rgba(52,211,153,0.4)" stroke-width="1.5"/>
+  <text x="96" y="27" font-family="Arial,sans-serif" font-size="12" fill="#34d399" text-anchor="middle">✦</text>
+
+</svg>

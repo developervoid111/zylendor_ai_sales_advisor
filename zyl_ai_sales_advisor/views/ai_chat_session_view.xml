@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         Chat Session — List
+    ════════════════════════════════════════════════════════════════ -->
+    <record id="view_ai_chat_session_list" model="ir.ui.view">
+        <field name="name">zyl.ai.chat.session.list</field>
+        <field name="model">zyl.ai.chat.session</field>
+        <field name="arch" type="xml">
+            <tree string="Chat Sessions" decoration-muted="state=='archived'">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="message_count" string="Messages"/>
+                <field name="total_tokens" string="Tokens"/>
+                <field name="last_message_date" string="Last Activity"/>
+                <field name="state" widget="badge"/>
+                <field name="create_date" string="Started"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Chat Session — Form (read-only transcript view) -->
+    <record id="view_ai_chat_session_form" model="ir.ui.view">
+        <field name="name">zyl.ai.chat.session.form</field>
+        <field name="model">zyl.ai.chat.session</field>
+        <field name="arch" type="xml">
+            <form string="Chat Session">
+                <header>
+                    <button name="zyl_ai_sales_advisor.action_sales_advisor_dashboard"
+                            string="Open Dashboard" type="action" class="btn-primary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="active,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id" readonly="1"/>
+                            <field name="create_date" readonly="1" string="Started"/>
+                        </group>
+                        <group>
+                            <field name="total_tokens" readonly="1"/>
+                            <field name="message_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Conversation Transcript">
+                            <field name="message_ids" readonly="1">
+                                <tree>
+                                    <field name="create_date" string="Time"/>
+                                    <field name="role" widget="badge"/>
+                                    <field name="content" string="Message"/>
+                                    <field name="tokens_used" string="Tokens"/>
+                                    <field name="rating" widget="priority"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_ai_chat_session_search" model="ir.ui.view">
+        <field name="name">zyl.ai.chat.session.search</field>
+        <field name="model">zyl.ai.chat.session</field>
+        <field name="arch" type="xml">
+            <search string="Search Chat Sessions">
+                <field name="name"/>
+                <field name="user_id"/>
+                <filter name="active" string="Active" domain="[('state','=','active')]"/>
+                <filter name="archived" string="Archived" domain="[('state','=','archived')]"/>
+                <filter name="mine" string="My Sessions" domain="[('user_id','=',uid)]"/>
+                <separator/>
+                <group>
+                    <filter name="group_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter name="group_date" string="Start Date" domain="[]" context="{'group_by':'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_chat_sessions" model="ir.actions.act_window">
+        <field name="name">Chat Sessions</field>
+        <field name="res_model">zyl.ai.chat.session</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_ai_chat_session_search"/>
+        <field name="context">{'search_default_mine': 1, 'search_default_active': 1}</field>
+    </record>
+
+</odoo>
