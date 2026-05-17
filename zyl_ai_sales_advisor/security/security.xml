@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         Security Groups
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="module_category_sales_ai" model="ir.module.category">
+        <field name="name">AI Sales Advisor</field>
+        <field name="description">Manage access to AI Sales Advisor features.</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- Odoo 19: Privilege links the category to groups -->
+    <record id="privilege_sales_ai" model="res.groups.privilege">
+        <field name="name">AI Sales Advisor</field>
+        <field name="category_id" ref="module_category_sales_ai"/>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- User: can open the dashboard, chat, and view insights -->
+    <record id="group_sales_ai_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="privilege_id" ref="privilege_sales_ai"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">
+            Can access the AI Sales Advisor dashboard, use the AI chat,
+            and view published insights.
+        </field>
+    </record>
+
+    <!-- Manager: can configure AI, generate insights manually, archive sessions -->
+    <record id="group_sales_ai_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="privilege_id" ref="privilege_sales_ai"/>
+        <field name="implied_ids" eval="[(4, ref('group_sales_ai_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="comment">
+            Can configure AI providers, manage insights, and view all chat sessions.
+        </field>
+    </record>
+
+</odoo>
