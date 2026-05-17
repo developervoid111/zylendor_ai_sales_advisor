@@ -21,7 +21,7 @@
     "maintainer": "Zylentor ERP Solutions",
     "website": "https://zylentorerp.com",
     "license": "OPL-1",
-    "price": 149.00,
+    "price": 30.00,
     "currency": "USD",
     "sequence": 1,
     "description": """
