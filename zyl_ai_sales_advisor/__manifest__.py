@@ -2,7 +2,7 @@
 ###############################################################################
 #
 #    Zylentor ERP Solutions
-#    Copyright (C) 2024-TODAY Zylentor ERP Solutions (<https://zylentorerp.com>)
+#    Copyright (C) 2024-TODAY Zylentor ERP Solutions (<http://68.233.118.220>)
 #    Author: Zylentor ERP Solutions
 #
 #    PROPRIETARY LICENSE (OPL-1)
@@ -19,7 +19,7 @@
     "author": "Zylentor ERP Solutions",
     "support": "support@zylentorerp.com",
     "maintainer": "Zylentor ERP Solutions",
-    "website": "https://zylentorerp.com",
+    "website": "http://68.233.118.220",
     "license": "OPL-1",
     "price": 30.00,
     "currency": "USD",
